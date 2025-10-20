@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Truecaller Payment Alert Pro</title>
+<style>
+body {
+  background-color: #0f172a;
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.notification {
+  width: 95%;
+  max-width: 380px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  background-color: #fff;
+  color: #000;
+  margin-bottom: 25px;
+}
+
+.header {
+  background-color: #009655;
+  color: white;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.header img {
+  height: 18px;
+}
+
+.bank-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+}
+
+.bank-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.bank-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bank-name {
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bank-name img {
+  width: 15px;
+  height: 15px;
+}
+
+.verified {
+  font-size: 11px;
+  color: #009655;
+  text-transform: uppercase;
+}
+
+.amount {
+  font-size: 22px;
+  color: #009655;
+  font-weight: 700;
+  margin-left: 14px;
+}
+
+.desc {
+  font-size: 13px;
+  margin: 4px 14px 10px;
+}
+
+.small {
+  color: #777;
+  font-size: 11px;
+  margin: 0 14px 8px;
+}
+
+.action-bar {
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+}
+
+.action {
+  color: #009655;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.controls {
+  margin-top: 10px;
+  background: #1f2937;
+  padding: 18px;
+  border-radius: 12px;
+  width: 95%;
+  max-width: 400px;
+}
+
+.controls h2 {
+  margin-bottom: 12px;
+  font-size: 17px;
+  color: #10b981;
+}
+
+input, select {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 9px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+}
+
+button {
+  background: #10b981;
+  border: none;
+  padding: 10px 18px;
+  color: white;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover {
+  background: #0ea271;
+}
+</style>
+</head>
+<body>
+
+<div class="notification" id="notif">
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:5px;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/37/Truecaller_logo.svg" alt="Truecaller">
+      <span>Business Chat</span>
+    </div>
+    <span id="time">9:17 am</span>
+  </div>
+
+  <div class="bank-row">
+    <div class="bank-logo">
+      <img id="bankIcon" src="https://upload.wikimedia.org/wikipedia/commons/1/15/AU_Small_Finance_Bank_logo.png" alt="Bank">
+    </div>
+    <div>
+      <div class="bank-name" id="bankName">
+        AU Bank 
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Blue_check.svg" alt="verified">
+      </div>
+      <div class="verified">Verified Business</div>
+    </div>
+  </div>
+
+  <div class="amount" id="amount">+ ₹5,998</div>
+  <div class="desc" id="desc">IMPS transfer from Bhartipay to Account 2894</div>
+  <div class="small" id="balance">Balance: Unlimited</div>
+
+  <div class="action-bar">
+    <div class="action">MARK AS READ</div>
+    <div class="action">VIEW PROFILE</div>
+  </div>
+</div>
+
+<div class="controls">
+  <h2>💰 Payment Alert Pro — Controls</h2>
+  <select id="bankSelect">
+    <option value="AU">AU Bank</option>
+    <option value="SBI">SBI</option>
+    <option value="HDFC">HDFC</option>
+    <option value="ICICI">ICICI</option>
+    <option value="Axis">Axis Bank</option>
+    <option value="Yes">Yes Bank</option>
+    <option value="Kotak">Kotak Bank</option>
+    <option value="Paytm">Paytm Bank</option>
+  </select>
+  <input id="sender" placeholder="Sender name (e.g. Bhartipay)">
+  <input id="amountInput" placeholder="Amount (e.g. 5998)">
+  <input id="account" placeholder="Account last 4 digits (e.g. 2894)">
+  <button onclick="generate()">Generate Notification</button>
+</div>
+
+<script>
+const bankIcons = {
+  "AU": "https://upload.wikimedia.org/wikipedia/commons/1/15/AU_Small_Finance_Bank_logo.png",
+  "SBI": "https://upload.wikimedia.org/wikipedia/commons/5/5a/State_Bank_of_India_logo.svg",
+  "HDFC": "https://upload.wikimedia.org/wikipedia/commons/4/4a/HDFC_Bank_Logo.svg",
+  "ICICI": "https://upload.wikimedia.org/wikipedia/en/f/fc/ICICI_Bank_Logo.svg",
+  "Axis": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Axis_Bank_logo.svg",
+  "Yes": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Yes_Bank_logo.svg",
+  "Kotak": "https://upload.wikimedia.org/wikipedia/en/6/6b/Kotak_Mahindra_Bank_logo.svg",
+  "Paytm": "https://upload.wikimedia.org/wikipedia/commons/2/25/Paytm_logo.svg"
+};
+
+function generate(){
+  let bank = document.getElementById("bankSelect").value;
+  let sender = document.getElementById("sender").value || "Bhartipay";
+  let amt = document.getElementById("amountInput").value || "5998";
+  let acc = document.getElementById("account").value || "2894";
+
+  document.getElementById("bankIcon").src = bankIcons[bank];
+  document.getElementById("bankName").innerHTML = `${bank} Bank <img src='https://upload.wikimedia.org/wikipedia/commons/b/b7/Blue_check.svg' alt='verified'>`;
+  document.getElementById("amount").textContent = "+ ₹" + Number(amt).toLocaleString();
+  document.getElementById("desc").textContent = `IMPS transfer from ${sender} to Account ${acc}`;
+
+  const now = new Date();
+  const hrs = now.getHours() % 12 || 12;
+  const mins = now.getMinutes().toString().padStart(2,'0');
+  const ampm = now.getHours() >= 12 ? "pm" : "am";
+  document.getElementById("time").textContent = `${hrs}:${mins} ${ampm}`;
+}
+</script>
+</body>
+</html>
